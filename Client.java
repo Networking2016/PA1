@@ -7,6 +7,11 @@ import java.util.Scanner;
 
 class Client {
     public static void main(String[] args) {
+        if(args.length <= 1) {
+            System.out.println("Usage: Client hostname port");
+            return;
+        }
+
         String host = args[0];
         int port = Integer.parseInt(args[1]);
         try (

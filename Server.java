@@ -8,6 +8,11 @@ import java.net.Socket;
 
 class Server {
     public static void main(String[] args) {
+        if(args.length <= 0) {
+            System.out.println("Usage: Server port");
+            return;
+        }
+
         int port = Integer.parseInt(args[0]);
         try (
                 ServerSocket serverSocket = new ServerSocket(port);
@@ -24,30 +29,43 @@ class Server {
 
                 String line;
                 while ((line = in.readLine()) != null) {
+                    String log = "get: " + line + ", return: ";
+
                     String[] split = line.split(" ");
                     String command = split[0];
 
                     if (command.equals("bye") || command.equals("exit")) {
-                        out.println(ServerResponses.EXIT.getValue());
+                        int rsp = ServerResponses.EXIT.getValue();
+                        out.println(rsp);
+                        System.out.println(log + rsp);
                         break;
                     }
                     if (command.equals("terminate")) {
-                        out.println(ServerResponses.EXIT.getValue());
+                        int rsp = ServerResponses.EXIT.getValue();
+                        out.println(rsp);
+                        System.out.println(log + rsp);
                         System.exit(0);
                     }
+                    
                     BinaryArithmeticOp operator;
                     try {
                         operator = BinaryArithmeticOp.getOpFromString(command);
                     } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
-                        out.println(ServerResponses.INVALID_OPERATION.getValue());
+                        int rsp = ServerResponses.INVALID_OPERATION.getValue();
+                        out.println(rsp);
+                        System.out.println(log + rsp);
                         continue;
                     }
 
                     if (split.length < 3) {
-                        out.println(ServerResponses.TOO_FEW_INPUTS.getValue());
+                        int rsp = ServerResponses.TOO_FEW_INPUTS.getValue();
+                        out.println(rsp);
+                        System.out.println(log + rsp);
                         continue;
                     } else if (split.length > 5) {
-                        out.println(ServerResponses.TOO_MANY_INPUTS.getValue());
+                        int rsp = ServerResponses.TOO_MANY_INPUTS.getValue();
+                        out.println(rsp);
+                        System.out.println(log + rsp);
                         continue;
                     }
 
@@ -57,9 +75,14 @@ class Server {
                             Long operand = Long.parseLong(split[index]);
                             intermediateVal = operator.exec(intermediateVal, operand);
                         }
-                        out.println(Long.toString(intermediateVal));
+
+                        long rsp = intermediateVal;
+                        out.println(rsp);
+                        System.out.println(log + rsp);
                     } catch (NumberFormatException ex) {
-                        out.println("-4");
+                        int rsp = ServerResponses.NON_NUMERIC_INPUT.getValue();
+                        out.println(rsp);
+                        System.out.println(log + rsp);
                     }
                 }
             }
