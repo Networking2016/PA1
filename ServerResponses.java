@@ -22,7 +22,7 @@ public enum ServerResponses {
         }
     }
     
-    ServerResponses(int value, String description) {
+    private ServerResponses(int value, String description) {
         this.value = value;
         this.description = description;
     }
