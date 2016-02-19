@@ -29,7 +29,7 @@ class Server {
 
                 String line;
                 while ((line = in.readLine()) != null) {
-                    String log = "get: " + line + ", return: ";
+                    String logPrefix = "get: " + line + ", return: ";
 
                     String[] split = line.split(" ");
                     String command = split[0];
@@ -37,35 +37,35 @@ class Server {
                     if (command.equals("bye") || command.equals("exit")) {
                         int rsp = ServerResponses.EXIT.getValue();
                         out.println(rsp);
-                        System.out.println(log + rsp);
+                        System.out.println(logPrefix + rsp);
                         break;
                     }
                     if (command.equals("terminate")) {
                         int rsp = ServerResponses.EXIT.getValue();
                         out.println(rsp);
-                        System.out.println(log + rsp);
+                        System.out.println(logPrefix + rsp);
                         System.exit(0);
                     }
-                    
+
                     BinaryArithmeticOp operator;
                     try {
                         operator = BinaryArithmeticOp.getOpFromString(command);
                     } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
                         int rsp = ServerResponses.INVALID_OPERATION.getValue();
                         out.println(rsp);
-                        System.out.println(log + rsp);
+                        System.out.println(logPrefix + rsp);
                         continue;
                     }
 
                     if (split.length < 3) {
                         int rsp = ServerResponses.TOO_FEW_INPUTS.getValue();
                         out.println(rsp);
-                        System.out.println(log + rsp);
+                        System.out.println(logPrefix + rsp);
                         continue;
                     } else if (split.length > 5) {
                         int rsp = ServerResponses.TOO_MANY_INPUTS.getValue();
                         out.println(rsp);
-                        System.out.println(log + rsp);
+                        System.out.println(logPrefix + rsp);
                         continue;
                     }
 
@@ -78,11 +78,11 @@ class Server {
 
                         long rsp = intermediateVal;
                         out.println(rsp);
-                        System.out.println(log + rsp);
+                        System.out.println(logPrefix + rsp);
                     } catch (NumberFormatException ex) {
                         int rsp = ServerResponses.NON_NUMERIC_INPUT.getValue();
                         out.println(rsp);
-                        System.out.println(log + rsp);
+                        System.out.println(logPrefix + rsp);
                     }
                 }
             }
@@ -95,8 +95,6 @@ class Server {
 
 abstract class BinaryArithmeticOp {
     public abstract long exec(long i, long j);
-
-    @SuppressWarnings("unused")
     public abstract double exec(double a, double b);
 
     public static BinaryArithmeticOp getOpFromString(String command) {
