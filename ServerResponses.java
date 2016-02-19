@@ -1,5 +1,4 @@
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +6,7 @@ import java.util.Map;
 
 public enum ServerResponses {
     INVALID_OPERATION(-1, "Incorrect operation command"),
-    TOO_FEW_INPUTS(-2, "Numnber of inputs is less than two"),
+    TOO_FEW_INPUTS(-2, "Number of inputs is less than two"),
     TOO_MANY_INPUTS(-3, "Number of inputs is greater than four"),
     NON_NUMERIC_INPUT(-4, "One or more of the inputs contain(s) non-number(s)"),
     EXIT(-5, "Exit");
@@ -23,7 +22,7 @@ public enum ServerResponses {
         }
     }
     
-    private ServerResponses(int value, String description) {
+    ServerResponses(int value, String description) {
         this.value = value;
         this.description = description;
     }
