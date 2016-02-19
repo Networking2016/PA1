@@ -18,15 +18,19 @@ class Server {
                 ServerSocket serverSocket = new ServerSocket(port);
         ) {
             System.out.println("ServerSocket connected to port " + port + "!");
+            // Continuously accept connection suntil terminated
             while (true) {
+                // Accept connection
                 Socket clientSocket = serverSocket.accept();
                 InetAddress ip = clientSocket.getInetAddress();
                 System.out.println("get connect from " + ip.getHostAddress());
 
+                // Prepare in/out streams and say hello
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 out.println("Hello!");
 
+                // read messages until connection is lost
                 String line;
                 while ((line = in.readLine()) != null) {
                     String logPrefix = "get: " + line + ", return: ";
@@ -34,6 +38,7 @@ class Server {
                     String[] split = line.split(" ");
                     String command = split[0];
 
+                    // Handle client disconnect or terminate request
                     if (command.equals("bye") || command.equals("exit")) {
                         int rsp = ServerResponses.EXIT.getValue();
                         out.println(rsp);
@@ -47,6 +52,7 @@ class Server {
                         System.exit(0);
                     }
 
+                    // Get binary arithmetic operator
                     BinaryArithmeticOp operator;
                     try {
                         operator = BinaryArithmeticOp.getOpFromString(command);
@@ -57,6 +63,7 @@ class Server {
                         continue;
                     }
 
+                    // Check argument count is valid
                     if (split.length < 3) {
                         int rsp = ServerResponses.TOO_FEW_INPUTS.getValue();
                         out.println(rsp);
@@ -69,6 +76,7 @@ class Server {
                         continue;
                     }
 
+                    // Do calculations
                     try {
                         long intermediateVal = Long.parseLong(split[1]);
                         for (int index = 2; index < split.length; ++index) {
@@ -76,6 +84,7 @@ class Server {
                             intermediateVal = operator.exec(intermediateVal, operand);
                         }
 
+                        // Return answer
                         long rsp = intermediateVal;
                         out.println(rsp);
                         System.out.println(logPrefix + rsp);
@@ -92,7 +101,7 @@ class Server {
         }
     }
 }
-
+// Command pattern base class for arithmetic operations
 abstract class BinaryArithmeticOp {
     public abstract long exec(long i, long j);
     public abstract double exec(double a, double b);
